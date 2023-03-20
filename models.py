@@ -68,8 +68,22 @@ class NaiveBayes(object):
         @return:
             a 1D numpy array of predictions
         """
-        for input in inputs:
-            zero_features = np.where(input == 0, )
+        predictions = []
+        for i in range(len(inputs)):
+            input = inputs[i]
+            attr_dist_zerocol = self.attr_dist[0]
+            attr_dist_onecol = self.attr_dist[1]
+            for j in range(len(input)):
+                if input[j] == 0:
+                    attr_dist_zerocol[j] = 1 - attr_dist_zerocol[j]
+                    attr_dist_onecol[j] = 1 - attr_dist_onecol[j]
+            product_zero = np.prod(attr_dist_zerocol)
+            product_one = np.prod(attr_dist_onecol)
+            joint = np.asarray([product_zero, product_one]) * self.label_priors
+            posterior = joint/joint.sum()
+            max_pros = max(posterior)
+            predictions.append(max_pros)
+        return predictions
 
     def accuracy(self, X_test, y_test):
         """ Outputs the accuracy of the trained model on a given dataset (data).

@@ -70,7 +70,6 @@ def main():
     model = NaiveBayes(2)
 
     model.train(X_train, y_train)
-    print(model.train(X_train, y_train))
 
     print("------------------------------------------------------------")
 
