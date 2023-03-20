@@ -72,6 +72,8 @@ class NaiveBayes(object):
         predictions = []
         for i in range(len(inputs)):
             input = inputs[i]
+            print("att")
+            print(self.attr_dist)
             attr_dist_zerocol = self.attr_dist[0]
             attr_dist_onecol = self.attr_dist[1]
             for j in range(len(input)):
