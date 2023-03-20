@@ -69,6 +69,7 @@ class NaiveBayes(object):
             a 1D numpy array of predictions
         """
         predictions = []
+        print(self.attr_dist)
         for i in range(len(inputs)):
             input = inputs[i]
             attr_dist_zerocol = self.attr_dist[0]
