@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 class NaiveBayes(object):
     """ Bernoulli Naive Bayes model
@@ -32,17 +33,30 @@ class NaiveBayes(object):
         num_attr = X_train.shape[1]
         classes_list, counts = np.unique(y_train, return_counts=True)
         priors = (counts + alpha) / (y_train.size + self.n_classes * alpha)
+        priors = np.asarray([math.log(x) for x in priors])
+        label_one_indices = np.argwhere(y_train == 1)
         attr_dist = []
         for i in range(num_attr):
             col = X_train[:, i]
-            attr_unique, attr_counts = np.unique(col, return_counts=True)
-            attr_dist.append(attr_counts)
-        attr_dist = np.array(attr_dist).reshape(-1, self.n_classes)
+            one_count = 0
+            zero_count = 0
+            for c in range(len(col)):
+                if c in label_one_indices:
+                    if col[c] == 1:
+                        one_count += 1
+                else:
+                    if col[c] == 1:
+                        zero_count += 1
+            attr_dist.append([zero_count, one_count])
+        attr_dist = np.transpose(np.array(attr_dist))
+        att_dist = []
         for i in range(self.n_classes):
-            attr_dist[:, i] = (attr_dist[:, i] + alpha) / (counts[i] + self.n_classes * alpha)
+            new_atr = (attr_dist[i, :] + alpha) / (counts[i] + self.n_classes * alpha)
+            att_dist.append(new_atr)
+        
         self.label_priors = priors
-        self.attr_dist = attr_dist
-        return attr_dist, priors
+        self.attr_dist = np.asarray(att_dist).reshape(self.n_classes, -1)
+        return att_dist, priors
 
     def predict(self, inputs):
         """ Outputs a predicted label for each input in inputs.
@@ -54,7 +68,8 @@ class NaiveBayes(object):
         @return:
             a 1D numpy array of predictions
         """
-
+        for input in inputs:
+            zero_features = np.where(input == 0, )
 
     def accuracy(self, X_test, y_test):
         """ Outputs the accuracy of the trained model on a given dataset (data).
