@@ -30,7 +30,7 @@ class NaiveBayes(object):
         """
 
         alpha = 1
-        num_attr = X_train.shape[1]
+        num_attr = np.asarray(X_train).shape[1]
         classes_list, counts = np.unique(y_train, return_counts=True)
         priors = (counts + alpha) / (y_train.size + self.n_classes * alpha)
         priors = np.asarray([math.log(x) for x in priors])
