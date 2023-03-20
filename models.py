@@ -57,7 +57,6 @@ class NaiveBayes(object):
         att_dist = np.asarray(att_dist).reshape(self.n_classes, -1)
         self.label_priors = priors
         self.attr_dist = att_dist
-        print(att_dist)
         return att_dist, priors
 
     def predict(self, inputs):
@@ -71,11 +70,13 @@ class NaiveBayes(object):
             a 1D numpy array of predictions
         """
         predictions = []
+        print(self.attr_dist)
         for i in range(len(inputs)):
             input = inputs[i]
-            print(input)
             attr_dist_zerocol = self.attr_dist[0]
             attr_dist_onecol = self.attr_dist[1]
+            print(attr_dist_zerocol)
+            print(attr_dist_onecol)
             for j in range(len(input)):
                 if input[j] == 0:
                     attr_dist_zerocol[j] = 1 - attr_dist_zerocol[j]
