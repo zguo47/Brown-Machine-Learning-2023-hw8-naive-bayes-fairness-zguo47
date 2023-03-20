@@ -54,8 +54,9 @@ class NaiveBayes(object):
             new_atr = (attr_dist[i, :] + alpha) / (counts[i] + self.n_classes * alpha)
             att_dist.append(new_atr)
         
+        att_dist = np.asarray(att_dist)
         self.label_priors = priors
-        self.attr_dist = np.asarray(att_dist).reshape(self.n_classes, -1)
+        self.attr_dist = att_dist.reshape(self.n_classes, -1)
         return att_dist, priors
 
     def predict(self, inputs):
@@ -68,7 +69,6 @@ class NaiveBayes(object):
         @return:
             a 1D numpy array of predictions
         """
-        print("wtf")
         predictions = []
         for i in range(len(inputs)):
             input = inputs[i]
@@ -86,7 +86,8 @@ class NaiveBayes(object):
             posterior = joint / (joint[0] + joint[1])
             max_pros = np.argmax(posterior)
             predictions.append(max_pros)
-        return np.asarray(predictions)
+        predictions = np.asarray(predictions).flatten()
+        return predictions
 
     def accuracy(self, X_test, y_test):
         """ Outputs the accuracy of the trained model on a given dataset (data).
