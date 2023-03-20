@@ -85,7 +85,7 @@ class NaiveBayes(object):
             posterior = joint / (joint[0] + joint[1])
             max_pros = np.argmax(posterior)
             predictions.append(max_pros)
-        return np.array(predictions)
+        return np.asarray(predictions)
 
     def accuracy(self, X_test, y_test):
         """ Outputs the accuracy of the trained model on a given dataset (data).
@@ -97,7 +97,8 @@ class NaiveBayes(object):
             a float number indicating accuracy (between 0 and 1)
         """
 
-        # TODO
+        predicted_labels = self.predict(X_test)
+        return np.sum(predicted_labels == y_test)/len(y_test)
 
     def print_fairness(self, X_test, y_test, x_sens):
         """ 
