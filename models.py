@@ -71,21 +71,15 @@ class NaiveBayes(object):
         predictions = []
         for i in range(len(inputs)):
             input = inputs[i]
-            attr_dist_zerocol = self.attr_dist[0]
-            attr_dist_onecol = self.attr_dist[1]
+            att_dist = self.attr_dist
+            joint = np.log(self.label_priors)
             for j in range(len(input)):
                 if input[j] == 0:
-                    attr_dist_onecol[j] = 1 - attr_dist_zerocol[j]
+                    joint += np.log(np.array([1 - att_dist[0][j], 1 - att_dist[1][j]]))
                 else:
-                    attr_dist_zerocol[j] = 1 - attr_dist_onecol[j]
-            print(attr_dist_zerocol)
-            print(attr_dist_onecol)
-            print(self.label_priors)
-            product_zero = np.sum(np.log(attr_dist_zerocol))
-            product_one = np.sum(np.log(attr_dist_onecol))
+                    joint += np.log(np.array([att_dist[0][j], att_dist[1][j]]))
 
-            joint = np.asarray([product_zero, product_one]) + np.log(self.label_priors)
-            joint = np.asarray([math.exp(x) for x in joint])
+            joint = np.asarray([math.exp(x) for x in joint]) 
             posterior = joint / joint.sum()
             max_pros = np.argmax(posterior)
             predictions.append(max_pros)
