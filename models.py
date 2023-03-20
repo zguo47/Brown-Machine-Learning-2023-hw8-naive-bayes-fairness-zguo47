@@ -69,21 +69,21 @@ class NaiveBayes(object):
             a 1D numpy array of predictions
         """
         predictions = []
-        print(self.attr_dist)
         for i in range(len(inputs)):
             input = inputs[i]
             attr_dist_zerocol = self.attr_dist[0]
             attr_dist_onecol = self.attr_dist[1]
             for j in range(len(input)):
                 if input[j] == 0:
-                    attr_dist_zerocol[j] = 1 - attr_dist_zerocol[j]
-                    attr_dist_onecol[j] = 1 - attr_dist_onecol[j]
+                    attr_dist_onecol[j] = 1 - attr_dist_zerocol[j]
+                else:
+                    attr_dist_zerocol[j] = 1 - attr_dist_onecol[j]
             product_zero = np.sum(np.log(attr_dist_zerocol))
             product_one = np.sum(np.log(attr_dist_onecol))
 
-            joint = np.asarray([product_zero, product_one]) * np.log(self.label_priors)
+            joint = np.asarray([product_zero, product_one]) + np.log(self.label_priors)
             joint = np.asarray([math.exp(x) for x in joint])
-            posterior = joint / (joint[0] + joint[1])
+            posterior = joint / joint.sum()
             max_pros = np.argmax(posterior)
             predictions.append(max_pros)
         predictions = np.asarray(predictions).flatten()
