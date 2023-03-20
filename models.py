@@ -68,6 +68,7 @@ class NaiveBayes(object):
         @return:
             a 1D numpy array of predictions
         """
+        print("wtf")
         predictions = []
         for i in range(len(inputs)):
             input = inputs[i]
@@ -85,7 +86,6 @@ class NaiveBayes(object):
             posterior = joint / (joint[0] + joint[1])
             max_pros = np.argmax(posterior)
             predictions.append(max_pros)
-        print(predictions)
         return np.asarray(predictions)
 
     def accuracy(self, X_test, y_test):
