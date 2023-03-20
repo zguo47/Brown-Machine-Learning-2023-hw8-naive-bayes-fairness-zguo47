@@ -28,7 +28,17 @@ class NaiveBayes(object):
                 2) a 1D numpy array of the priors distribution
         """
 
-        # TODO
+        alpha = 1
+        num_attr = X_train.shape[1]
+        classes_list, counts = np.unique(y_train, return_counts=True)
+        priors = (counts + alpha) / (y_train.size + self.n_classes * alpha)
+        attr_unique, attr_counts = np.unique(X_train, axis=1, return_counts=True)
+        attr_dist = attr_counts.reshape(-1, self.n_classes)
+        for i in range(self.n_classes):
+            attr_dist[:, i] = (attr_dist[:, i] + alpha) / (counts[i] + self.n_classes * alpha)
+        self.label_priors = priors
+        self.attr_dist = attr_dist
+        return attr_dist, priors
 
     def predict(self, inputs):
         """ Outputs a predicted label for each input in inputs.
@@ -41,7 +51,6 @@ class NaiveBayes(object):
             a 1D numpy array of predictions
         """
 
-        # TODO
 
     def accuracy(self, X_test, y_test):
         """ Outputs the accuracy of the trained model on a given dataset (data).
