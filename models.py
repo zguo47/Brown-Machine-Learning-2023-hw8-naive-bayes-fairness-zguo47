@@ -32,8 +32,12 @@ class NaiveBayes(object):
         num_attr = X_train.shape[1]
         classes_list, counts = np.unique(y_train, return_counts=True)
         priors = (counts + alpha) / (y_train.size + self.n_classes * alpha)
-        attr_unique, attr_counts = np.unique(X_train, axis=1, return_counts=True)
-        attr_dist = attr_counts.reshape(-1, self.n_classes)
+        attr_dist = []
+        for i in range(num_attr):
+            col = X_train[:, i]
+            attr_unique, attr_counts = np.unique(col, return_counts=True)
+            attr_dist.append(attr_counts)
+        attr_dist = np.array(attr_dist).reshape(-1, self.n_classes)
         for i in range(self.n_classes):
             attr_dist[:, i] = (attr_dist[:, i] + alpha) / (counts[i] + self.n_classes * alpha)
         self.label_priors = priors
