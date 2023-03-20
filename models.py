@@ -33,7 +33,6 @@ class NaiveBayes(object):
         num_attr = X_train.shape[1]
         classes_list, counts = np.unique(y_train, return_counts=True)
         priors = (counts + alpha) / (y_train.size + self.n_classes * alpha)
-        priors = np.asarray([math.log(x) for x in priors])
         label_one_indices = np.argwhere(y_train == 1)
         attr_dist = []
         for i in range(num_attr):
@@ -57,8 +56,6 @@ class NaiveBayes(object):
         att_dist = np.asarray(att_dist).reshape(self.n_classes, -1)
         self.label_priors = priors
         self.attr_dist = att_dist
-        print("This is the att_dist computed:")
-        print(self.attr_dist)
         return att_dist, priors
 
     def predict(self, inputs):
@@ -72,8 +69,6 @@ class NaiveBayes(object):
             a 1D numpy array of predictions
         """
         predictions = []
-        print("This is att_dist in predict")
-        print(self.attr_dist)
         for i in range(len(inputs)):
             input = inputs[i]
             attr_dist_zerocol = self.attr_dist[0]
@@ -82,11 +77,11 @@ class NaiveBayes(object):
                 if input[j] == 0:
                     attr_dist_zerocol[j] = 1 - attr_dist_zerocol[j]
                     attr_dist_onecol[j] = 1 - attr_dist_onecol[j]
-            product_zero = np.sum(np.array([math.log(x) for x in attr_dist_zerocol]))
-            product_one = np.sum(np.array([math.log(x) for x in attr_dist_onecol]))
+            product_zero = np.sum(np.log(attr_dist_zerocol))
+            product_one = np.sum(np.log(attr_dist_onecol))
 
-            joint = np.asarray([product_zero, product_one])
-            joint = np.asarray([math.exp(x) for x in joint]) * self.label_priors
+            joint = np.asarray([product_zero, product_one]) * np.log(self.label_priors)
+            joint = np.asarray([math.exp(x) for x in joint])
             posterior = joint / (joint[0] + joint[1])
             max_pros = np.argmax(posterior)
             predictions.append(max_pros)
