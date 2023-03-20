@@ -78,6 +78,8 @@ class NaiveBayes(object):
                 if input[j] == 0:
                     attr_dist_zerocol[j] = 1 - attr_dist_zerocol[j]
                     attr_dist_onecol[j] = 1 - attr_dist_onecol[j]
+            print(attr_dist_zerocol)
+            print(attr_dist_onecol)
             product_zero = np.sum(np.array([math.log(x) for x in attr_dist_zerocol]))
             product_one = np.sum(np.array([math.log(x) for x in attr_dist_onecol]))
 
