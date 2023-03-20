@@ -54,9 +54,9 @@ class NaiveBayes(object):
             new_atr = (attr_dist[i, :] + alpha) / (counts[i] + self.n_classes * alpha)
             att_dist.append(new_atr)
         
-        att_dist = np.asarray(att_dist)
+        att_dist = np.asarray(att_dist).reshape(self.n_classes, -1)
         self.label_priors = priors
-        self.attr_dist = att_dist.reshape(self.n_classes, -1)
+        self.attr_dist = att_dist
         return att_dist, priors
 
     def predict(self, inputs):
